@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.106
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHibernate.BulkBatcher.Core", "NHibernate.BulkBatcher.Core\NHibernate.BulkBatcher.Core.csproj", "{0F39BDEF-E471-49B2-A39D-15F3F0D8E7DF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHibernate.BulkBatcher.Tests", "NHibernate.BulkBatcher.Tests\NHibernate.BulkBatcher.Tests.csproj", "{42DB894F-44AC-4F77-85C7-3D15644DD7F0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHibernate.BulkBatcher.PostgreSql", "NHibernate.BulkBatcher.Postgresql\NHibernate.BulkBatcher.PostgreSql.csproj", "{FA66F363-0423-4086-BFE8-D428B23A2FDE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PublishPackages", "PublishPackages", "{744796AE-B6DE-42B1-843C-918CBA7E8F83}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHibernate.BulkBatcher.Core.Publish", "NHibernate.BulkBatcher.Core.Publish\NHibernate.BulkBatcher.Core.Publish.csproj", "{4AB6C92C-FECD-4F62-A5E0-2B6AECEA9508}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHibernate.BulkBatcher.PostgreSql.Publish", "NHibernate.BulkBatcher.Core.PostgreSql.Publish\NHibernate.BulkBatcher.PostgreSql.Publish.csproj", "{86A75F61-9105-4D3D-A628-C116B318FF62}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0F39BDEF-E471-49B2-A39D-15F3F0D8E7DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F39BDEF-E471-49B2-A39D-15F3F0D8E7DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F39BDEF-E471-49B2-A39D-15F3F0D8E7DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F39BDEF-E471-49B2-A39D-15F3F0D8E7DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42DB894F-44AC-4F77-85C7-3D15644DD7F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42DB894F-44AC-4F77-85C7-3D15644DD7F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42DB894F-44AC-4F77-85C7-3D15644DD7F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42DB894F-44AC-4F77-85C7-3D15644DD7F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA66F363-0423-4086-BFE8-D428B23A2FDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA66F363-0423-4086-BFE8-D428B23A2FDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA66F363-0423-4086-BFE8-D428B23A2FDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA66F363-0423-4086-BFE8-D428B23A2FDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AB6C92C-FECD-4F62-A5E0-2B6AECEA9508}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AB6C92C-FECD-4F62-A5E0-2B6AECEA9508}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AB6C92C-FECD-4F62-A5E0-2B6AECEA9508}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AB6C92C-FECD-4F62-A5E0-2B6AECEA9508}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86A75F61-9105-4D3D-A628-C116B318FF62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86A75F61-9105-4D3D-A628-C116B318FF62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86A75F61-9105-4D3D-A628-C116B318FF62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86A75F61-9105-4D3D-A628-C116B318FF62}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4AB6C92C-FECD-4F62-A5E0-2B6AECEA9508} = {744796AE-B6DE-42B1-843C-918CBA7E8F83}
+		{86A75F61-9105-4D3D-A628-C116B318FF62} = {744796AE-B6DE-42B1-843C-918CBA7E8F83}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {70B595E7-5106-4917-A3F7-78FF7044B346}
+	EndGlobalSection
+EndGlobal

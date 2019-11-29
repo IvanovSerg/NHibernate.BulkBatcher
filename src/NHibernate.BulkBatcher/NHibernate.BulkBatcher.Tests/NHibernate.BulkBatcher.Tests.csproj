@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+
+    <RootNamespace>NHibernate.BulkBatcher.Tests</RootNamespace>
+
+    <AssemblyName>NHibernate.BulkBatcher.Tests</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\nhibernate-mapping.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\nhibernate-mapping.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="NHibernate" Version="5.2.5" />
+    <PackageReference Include="Npgsql" Version="4.0.7" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NHibernate.BulkBatcher.Postgresql\NHibernate.BulkBatcher.PostgreSql.csproj" />
+  </ItemGroup>
+
+</Project>

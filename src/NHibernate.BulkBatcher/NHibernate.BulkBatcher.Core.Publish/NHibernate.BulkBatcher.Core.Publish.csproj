@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="LICENSE.txt" Pack="true" PackagePath="LICENSE.txt" />
+  </ItemGroup>
+  
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>NHibernate.BulkBatcher.Core</AssemblyName>
+    <RootNamespace>NHibernate.BulkBatcher.Core</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Core package for NHibernate bulk batcher.</Description>
+    <PackageTags>NHibernate, BulkInsert, BulkUpsert, BulkMerge, Bulk, Operations</PackageTags>
+    <AssemblyVersion>1.0.4.0</AssemblyVersion>
+    <FileVersion>1.0.4.0</FileVersion>
+    <Version>1.0.4</Version>
+    <PackageProjectUrl>https://github.com/ThisShard/NHibernate.BulkBatcher</PackageProjectUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <Copyright>ThisShard</Copyright>
+    <RepositoryUrl>https://github.com/ThisShard/NHibernate.BulkBatcher</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\Bin\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NHibernate" Version="5.2.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\NHibernate.BulkBatcher.Core\**\*.cs" Exclude="..\NHibernate.BulkBatcher.Core\obj\**\*.cs" />
+  </ItemGroup>
+
+</Project>

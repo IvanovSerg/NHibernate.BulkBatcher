@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NHibernate.BulkBatcher.Tests.Model" assembly="NHibernate.BulkBatcher.Tests">
+  <class name="TestEntity" table="`Test.&quot;Entity´" schema="`Test´">
+    <id name="Id" type="Guid" column="`Id´"/>
+    <property name="Value" type="string" column="`Value´"/>
+    <set name="RelatedEntities">
+      <key column="`TestEntityId´"/>
+      <one-to-many class="TestRelatedEntity"/>
+    </set>
+    <list name="ChildEntities" table="`ChildEntities´" schema="`Test´">
+      <key column="`TestEntityId´"/>
+      <index column="`Order´"/>
+      <composite-element class="TestChildEntity">
+        <property name="Value" type="string" column="`Value´"/>
+        <many-to-one name="RelatedEntity" column="`TestRelatedEntityId´" class="TestRelatedEntity"/>
+      </composite-element>
+    </list>
+  </class>
+  <class name="TestRelatedEntity" table="`TestRelatedEntity´" schema="`Test´">
+    <id name="Id" type="Guid" column="`Id´"/>
+    <property name="Value" type="string" column="`Value´"/>
+    <many-to-one name="TestEntity" column="`TestEntityId´" class="TestEntity"/>
+  </class>
+</hibernate-mapping>
