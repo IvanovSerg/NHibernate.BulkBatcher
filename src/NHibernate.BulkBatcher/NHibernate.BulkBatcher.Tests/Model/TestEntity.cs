@@ -13,5 +13,7 @@ namespace NHibernate.BulkBatcher.Tests.Model
         public virtual IList<TestChildEntity> ChildEntities { get; set; }
 
         public virtual ICollection<TestRelatedEntity> RelatedEntities { get; set; }
+        
+        public virtual IList<TestMTMEntity> ManyToManyEntities { get; set; }
     }
 }

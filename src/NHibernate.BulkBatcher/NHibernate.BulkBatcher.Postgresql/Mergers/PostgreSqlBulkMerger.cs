@@ -31,6 +31,15 @@ namespace NHibernate.BulkBatcher.PostgreSql.Mergers
                 EscapedRealColumn = PostgreNamingHelper.Escape(RealColumn);
 
                 IsKey = isKey;
+
+                if (isKey)
+                {
+                    TempUpdatedKeyColumn = $"{tempColumn}new";
+                    TempUpdatedKeySpecifiedColumn = $"{tempColumn}newSpecified";
+
+                    EscapedTempUpdatedKeyColumn = PostgreNamingHelper.Escape(TempUpdatedKeyColumn); 
+                    EscapedTempUpdatedKeySpecifiedColumn = PostgreNamingHelper.Escape(TempUpdatedKeySpecifiedColumn); 
+                }
             }
 
             /// <summary>
@@ -57,6 +66,26 @@ namespace NHibernate.BulkBatcher.PostgreSql.Mergers
             /// Имя столбца спецификации во временной таблице
             /// </summary>
             public string TempSpecifiedColumn { get; }
+            
+            /// <summary>
+            /// Имя столбца для обновленного ключа во временной таблице
+            /// </summary>
+            public string TempUpdatedKeyColumn { get; }
+            
+            /// <summary>
+            /// Имя столбца спецификации обновленного ключа во временной таблице
+            /// </summary>
+            public string TempUpdatedKeySpecifiedColumn { get; }
+            
+            /// <summary>
+            /// Имя столбца для обновленного ключа во временной таблице
+            /// </summary>
+            public string EscapedTempUpdatedKeyColumn { get; }
+            
+            /// <summary>
+            /// Имя столбца спецификации обновленного ключа во временной таблице
+            /// </summary>
+            public string EscapedTempUpdatedKeySpecifiedColumn { get; }
 
             /// <summary>
             /// Имя столбца во реальной таблице
@@ -140,7 +169,11 @@ namespace NHibernate.BulkBatcher.PostgreSql.Mergers
             NpgsqlConnection connection, NpgsqlTransaction transaction, Action<IDbCommand> logAction)
         {
             //Формируем команду импорта
-            var columnNames = schema.Rows.OfType<DataRow>().Select(x => (string) x["ColumnName"]).ToList();
+            var columns = schema.Rows.OfType<DataRow>().Select(x => new
+            {
+                Name = (string) x["ColumnName"],
+                IsKey = (bool) x["IsKey"]
+            }).ToList();
             var copyCommand = GetImportDataSql(tempTablePath, schema);
             using (var writer = connection.BeginBinaryImport(copyCommand))
             {
@@ -157,18 +190,29 @@ namespace NHibernate.BulkBatcher.PostgreSql.Mergers
                     //Запись состояния сущности
                     writer.Write(state);
 
-                    foreach (var column in columnNames)
+                    foreach (var column in columns)
                     {
-                        var result = entity.Values.TryGetValue(column, out var value);
-                        
-                        //Запись значения столбца
-                        if (!result || value == null || value == DBNull.Value)
-                            writer.WriteNull();
-                        else
-                            writer.Write(value);
+                        //Получение значения столбца
+                        var specified = entity.Values.TryGetValue(column.Name, out var value);
 
-                        //Запись о том что столбец передан
-                        writer.Write(result);
+                        //Запись значения столбца
+                        WriteValue(writer, value, specified);
+
+                        if (!column.IsKey)
+                            continue;
+
+                        if (entity.UpdatedKey == null)
+                        {
+                            //Запись нового ключа
+                            WriteValue(writer, null, false);
+                            continue;
+                        }
+                        
+                        //Получение значения нового ключа
+                        specified = entity.UpdatedKey.TryGetValue(column.Name, out value);
+
+                        //Запись нового ключа
+                        WriteValue(writer, value, specified);
                     }
 
                     count++;
@@ -177,7 +221,21 @@ namespace NHibernate.BulkBatcher.PostgreSql.Mergers
                 return count;
             }
         }
-        
+
+        /// <summary>
+        /// Пишет значение в импортер
+        /// </summary>
+        private void WriteValue(NpgsqlBinaryImporter writer, object value, bool valueSpecified)
+        {
+            if (!valueSpecified || value == null || value == DBNull.Value)
+                writer.WriteNull();
+            else
+                writer.Write(value);
+
+            //Запись о том что столбец передан
+            writer.Write(valueSpecified);
+        }
+
         /// <inheritdoc />
         protected override int MergeTables(string[] tempTablePath, string[] tablePath, DataTable schema,
             int expectedCount, NpgsqlConnection connection, NpgsqlTransaction transaction, Action<IDbCommand> logAction)
@@ -341,9 +399,17 @@ namespace NHibernate.BulkBatcher.PostgreSql.Mergers
             sb.Append($"CREATE TEMP TABLE {PostgreNamingHelper.Escape(tempTableName)} (");
             sb.Append($"{PostgreNamingHelper.Escape(cRowStateColumnName)} {cRowStateColumnType}");
             
-            foreach (DataRow columnInfo in schema.Rows)
+            foreach (var columnInfo in schema.Rows.OfType<DataRow>())
             {
                 var columnName = $"col{(int) columnInfo["ColumnOrdinal"]}";
+                sb.Append($", {PostgreNamingHelper.Escape(columnName)} " +
+                          $"{(string)columnInfo["DataTypeName"]}");
+                sb.Append($", {PostgreNamingHelper.Escape($"{columnName}Specified")} bool ");
+
+                if (!(bool) columnInfo["IsKey"]) 
+                    continue;
+
+                columnName = $"{columnName}new";
                 sb.Append($", {PostgreNamingHelper.Escape(columnName)} " +
                           $"{(string)columnInfo["DataTypeName"]}");
                 sb.Append($", {PostgreNamingHelper.Escape($"{columnName}Specified")} bool ");
@@ -381,10 +447,16 @@ namespace NHibernate.BulkBatcher.PostgreSql.Mergers
         private string GetImportDataSql(string[] tempTablePath, DataTable schema)
         {
             var columns = new List<string> {cRowStateColumnName};
-            foreach (DataRow row in schema.Rows)
+            foreach (var row in schema.Rows.OfType<DataRow>())
             {
                 columns.Add($"col{(int)row["ColumnOrdinal"]}");
                 columns.Add($"col{(int)row["ColumnOrdinal"]}Specified");
+
+                if (!(bool) row["IsKey"]) 
+                    continue;
+
+                columns.Add($"col{(int)row["ColumnOrdinal"]}new");
+                columns.Add($"col{(int)row["ColumnOrdinal"]}newSpecified");
             }
 
             return
@@ -421,8 +493,15 @@ namespace NHibernate.BulkBatcher.PostgreSql.Mergers
         /// </summary>
         private string GetTryUpdateSql(string[] tempTablePath, string[] tablePath, IList<ColumnMap> map)
         {
+            var setBlock = string.Join(", ", map.Select(x =>
+                    $"{x.EscapedRealColumn} = CASE " +
+                    $"WHEN tmp.{(x.IsKey ? x.EscapedTempUpdatedKeySpecifiedColumn : x.EscapedTempSpecifiedColumn)} " +
+                    $"THEN tmp.{(x.IsKey ? x.EscapedTempUpdatedKeyColumn : x.EscapedTempColumn)} " +
+                    $"ELSE rl.{x.EscapedRealColumn} " +
+                    $"END"));
+
             return $"UPDATE {PostgreNamingHelper.Escape(tablePath)} AS rl " +
-                   $"SET {string.Join(", ", map.Where(x => !x.IsKey).Select(x => $"{x.EscapedRealColumn} = CASE WHEN tmp.{x.EscapedTempSpecifiedColumn} THEN tmp.{x.EscapedTempColumn} ELSE rl.{x.EscapedRealColumn} END"))} " +
+                   $"SET {setBlock} " +
                    $"FROM {PostgreNamingHelper.Escape(tempTablePath)} AS tmp " +
                    $"WHERE tmp.{PostgreNamingHelper.Escape(cRowStateColumnName)} IN ('I','U') " +
                    $"AND {string.Join(" AND ", map.Where(x => x.IsKey).Select(x => $"rl.{x.EscapedRealColumn} = tmp.{x.EscapedTempColumn}"))} ";
@@ -446,8 +525,15 @@ namespace NHibernate.BulkBatcher.PostgreSql.Mergers
         /// </summary>
         private string GetUpdateSql(string[] tempTablePath, string[] tablePath, IList<ColumnMap> map)
         {
+            var setBlock = string.Join(", ", map.Select(x =>
+                $"{x.EscapedRealColumn} = CASE " +
+                $"WHEN tmp.{(x.IsKey ? x.EscapedTempUpdatedKeySpecifiedColumn : x.EscapedTempSpecifiedColumn)} " +
+                $"THEN tmp.{(x.IsKey ? x.EscapedTempUpdatedKeyColumn : x.EscapedTempColumn)} " +
+                $"ELSE rl.{x.EscapedRealColumn} " +
+                $"END"));
+
             return $"UPDATE {PostgreNamingHelper.Escape(tablePath)} AS rl " +
-                   $"SET {string.Join(", ", map.Where(x => !x.IsKey).Select(x => $"{x.EscapedRealColumn} = CASE WHEN tmp.{x.EscapedTempSpecifiedColumn} THEN tmp.{x.EscapedTempColumn} ELSE rl.{x.EscapedRealColumn} END"))} " +
+                   $"SET {setBlock} " +
                    $"FROM {PostgreNamingHelper.Escape(tempTablePath)} AS tmp " +
                    $"WHERE tmp.{PostgreNamingHelper.Escape(cRowStateColumnName)} IN ('U') " +
                    $"AND {string.Join(" AND ", map.Where(x => x.IsKey).Select(x => $"rl.{x.EscapedRealColumn} = tmp.{x.EscapedTempColumn}"))} ";

@@ -31,6 +31,11 @@ namespace NHibernate.BulkBatcher.Core.Model
         public IDictionary<string, object> Values { get; set; }
 
         /// <summary>
+        /// Новый ключ (при операции обновления)
+        /// </summary>
+        public IDictionary<string, object> UpdatedKey { get; set; }
+
+        /// <summary>
         /// Информация о команде из которой была создана эта сущность
         /// </summary>
         public CommandInfo CommandInfo { get; set; }

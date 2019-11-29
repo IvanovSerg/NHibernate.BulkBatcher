@@ -40,6 +40,10 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     {
                         session.Save(relatedEntity);
                     }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Save(manyToManyEntity);
+                    }
                 }
 
                 var sw = Stopwatch.StartNew();
@@ -61,6 +65,10 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     {
                         session.Save(relatedEntity);
                     }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Save(manyToManyEntity);
+                    }
                 }
 
                 var sw = Stopwatch.StartNew();
@@ -79,6 +87,10 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     foreach (var relatedEntity in entity.RelatedEntities)
                     {
                         session.Delete(relatedEntity);
+                    }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Delete(manyToManyEntity);
                     }
                 }
 
@@ -107,6 +119,10 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     {
                         session.Save(relatedEntity);
                     }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Save(manyToManyEntity);
+                    }
                 }
 
                 var sw = Stopwatch.StartNew();
@@ -128,6 +144,10 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     {
                         session.Save(relatedEntity);
                     }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Save(manyToManyEntity);
+                    }
                 }
 
                 var sw = Stopwatch.StartNew();
@@ -146,6 +166,10 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     foreach (var relatedEntity in entity.RelatedEntities)
                     {
                         session.Delete(relatedEntity);
+                    }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Delete(manyToManyEntity);
                     }
                 }
 
@@ -175,6 +199,10 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     {
                         session.Save(relatedEntity);
                     }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Save(manyToManyEntity);
+                    }
                 }
 
                 var sw = Stopwatch.StartNew();
@@ -193,6 +221,10 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     foreach (var relatedEntity in entity.RelatedEntities)
                     {
                         session.Save(relatedEntity);
+                    }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Save(manyToManyEntity);
                     }
                 }
 
@@ -217,6 +249,10 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     {
                         session.Save(relatedEntity);
                     }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Save(manyToManyEntity);
+                    }
                 }
 
                 var sw = Stopwatch.StartNew();
@@ -235,6 +271,10 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     foreach (var relatedEntity in entity.RelatedEntities)
                     {
                         session.Save(relatedEntity);
+                    }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Save(manyToManyEntity);
                     }
                 }
 
@@ -260,6 +300,10 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     {
                         session.Update(relatedEntity);
                     }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Update(manyToManyEntity);
+                    }
                 }
 
                 Assert.Throws<StaleStateException>(() => session.Flush());
@@ -283,6 +327,10 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     {
                         session.Update(relatedEntity);
                     }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Update(manyToManyEntity);
+                    }
                 }
 
                 await Assert.ThrowsAsync<StaleStateException>(() => session.FlushAsync());
@@ -290,7 +338,7 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
 
         }
 
-        [Theory(Skip = "No exception")]
+        //[Theory(Skip = "No exception")]
         [InlineData(9)]
         [InlineData(100)]
         [InlineData(1000)]
@@ -307,13 +355,17 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     {
                         session.Delete(relatedEntity);
                     }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Delete(manyToManyEntity);
+                    }
                 }
 
                 Assert.Throws<StaleStateException>(() => session.Flush());
             }
         }
 
-        [Theory(Skip= "No exception")]
+        //[Theory(Skip= "No exception")]
         [InlineData(9)]
         [InlineData(100)]
         [InlineData(1000)]
@@ -330,6 +382,10 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     foreach (var relatedEntity in entity.RelatedEntities)
                     {
                         session.Delete(relatedEntity);
+                    }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Delete(manyToManyEntity);
                     }
                 }
 
@@ -354,6 +410,10 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     {
                         session.Save(relatedEntity);
                     }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Save(manyToManyEntity);
+                    }
                 }
 
                 var sw = Stopwatch.StartNew();
@@ -376,6 +436,13 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     foreach (var relatedEntity in entity.RelatedEntities)
                     {
                         session.Save(relatedEntity);
+                    }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        if (testUpsertData.Contains(entity))
+                            session.Update(manyToManyEntity);
+                        else
+                            session.Save(manyToManyEntity);
                     }
                 }
 
@@ -403,6 +470,10 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     {
                         session.Save(relatedEntity);
                     }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Save(manyToManyEntity);
+                    }
                 }
 
                 var sw = Stopwatch.StartNew();
@@ -425,6 +496,13 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     foreach (var relatedEntity in entity.RelatedEntities)
                     {
                         session.Save(relatedEntity);
+                    }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        if (testUpsertData.Contains(entity))
+                            session.Update(manyToManyEntity);
+                        else
+                            session.Save(manyToManyEntity);
                     }
                 }
 
@@ -451,6 +529,10 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     {
                         session.Delete(relatedEntity);
                     }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Delete(manyToManyEntity);
+                    }
                 }
 
                 var sw = Stopwatch.StartNew();
@@ -475,6 +557,10 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql
                     foreach (var relatedEntity in entity.RelatedEntities)
                     {
                         session.Delete(relatedEntity);
+                    }
+                    foreach (var manyToManyEntity in entity.ManyToManyEntities)
+                    {
+                        session.Delete(manyToManyEntity);
                     }
                 }
 

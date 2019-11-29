@@ -34,12 +34,16 @@ namespace NHibernate.BulkBatcher.Core.EntityInfoExtractors
                 var where = ReadWhere(enumerator);
                 if (where == null)
                     return null;
-                
+
+                var setValues = ExtractorHelper.CreateValues(set.Item1, set.Item2, command);
+                var whereValues = ExtractorHelper.CreateValues(where.Item1, where.Item2, command);
+
                 return new EntityInfo()
                 {
                     State = EntityState.Modified,
                     TablePath = tablePath,
-                    Values = ExtractorHelper.CreateValues(set.Item1.Concat(where.Item1).ToArray(), set.Item2.Concat(where.Item2).ToArray(), command)
+                    Values = ExtractorHelper.Union(whereValues, setValues),
+                    UpdatedKey = ExtractorHelper.Intersect(setValues, whereValues)
                 };
             }
         }

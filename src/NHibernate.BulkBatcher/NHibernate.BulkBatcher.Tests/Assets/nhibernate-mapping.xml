@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NHibernate.BulkBatcher.Tests.Model" assembly="NHibernate.BulkBatcher.Tests">
-  <class name="TestEntity" table="`Test.&quot;Entity´" schema="`Test´">
+  <class name="TestEntity" table="`Test.Entity´" schema="`Test´">
     <id name="Id" type="Guid" column="`Id´"/>
     <property name="Value" type="string" column="`Value´"/>
     <set name="RelatedEntities">
@@ -15,10 +15,22 @@
         <many-to-one name="RelatedEntity" column="`TestRelatedEntityId´" class="TestRelatedEntity"/>
       </composite-element>
     </list>
+    <bag name="ManyToManyEntities" table="`ManyToMany´" schema="`Test´">
+      <key column="entityId"/>
+      <many-to-many class="TestMTMEntity" column="mtmId"/>
+    </bag>
   </class>
   <class name="TestRelatedEntity" table="`TestRelatedEntity´" schema="`Test´">
     <id name="Id" type="Guid" column="`Id´"/>
     <property name="Value" type="string" column="`Value´"/>
     <many-to-one name="TestEntity" column="`TestEntityId´" class="TestEntity"/>
+  </class>
+  <class name="TestMTMEntity" table="`TestMTMEntity´" schema="`Test´">
+    <id name="Id" type="Guid" column="`Id´"/>
+    <property name="Value" type="string" column="`Value´"/>
+    <bag name="Entities" table="`ManyToMany´" schema="`Test´" inverse="true">
+      <key column="mtmId"/>
+      <many-to-many class="TestEntity" column="entityId"/>
+    </bag>
   </class>
 </hibernate-mapping>

@@ -57,6 +57,23 @@ namespace NHibernate.BulkBatcher.Tests.PostgreSql.Arrange
                 };
                 result.Add(testEntity);
             }
+            
+            for (var i = 0; i < 3; i++)
+            {
+                var testManyToManyEntity = new TestMTMEntity()
+                {
+                    Id = Guid.NewGuid(),
+                    Value = Guid.NewGuid().ToString("N"),
+                    Entities = new List<TestEntity>()
+                };
+                foreach (var testEntity in result)
+                {
+                    testEntity.ManyToManyEntities = testEntity.ManyToManyEntities ?? new List<TestMTMEntity>();
+
+                    testEntity.ManyToManyEntities.Add(testManyToManyEntity);
+                    testManyToManyEntity.Entities.Add(testEntity);
+                }
+            }
 
             return result;
         }

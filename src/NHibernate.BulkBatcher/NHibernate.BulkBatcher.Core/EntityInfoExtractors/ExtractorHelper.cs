@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using System.Text;
+using NHibernate.Loader.Custom;
 using NHibernate.SqlCommand.Parser;
 
 namespace NHibernate.BulkBatcher.Core.EntityInfoExtractors
@@ -45,6 +47,54 @@ namespace NHibernate.BulkBatcher.Core.EntityInfoExtractors
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Возвращает объединение словарей
+        /// </summary>
+        public static IDictionary<string, object> Union(params IDictionary<string, object>[] dictionaries)
+        {
+            var union = new Dictionary<string, object>();
+            if (!dictionaries.Any())
+                return union;
+
+            foreach (var dict in dictionaries.Reverse())
+            {
+                foreach (var item in dict)
+                {
+                    union[item.Key] = item.Value;
+                }
+            }
+            return union;
+        }
+        
+        /// <summary>
+        /// Возвращает пересечение словарей
+        /// </summary>
+        public static IDictionary<string, object> Intersect(IDictionary<string, object> dictionary, params IDictionary<string, object>[] other)
+        {
+            if (!other.Any())
+                return dictionary;
+            
+            var intersect = new Dictionary<string, object>();
+
+            foreach (var item in dictionary)
+            {
+                var add = true;
+
+                foreach (var dict in other)
+                {
+                    if (!dict.ContainsKey(item.Key))
+                    {
+                        add = false;
+                        break;
+                    }
+                }
+
+                if (add)
+                    intersect.Add(item.Key, item.Value);
+            }
+            return intersect;
         }
     }
 }
