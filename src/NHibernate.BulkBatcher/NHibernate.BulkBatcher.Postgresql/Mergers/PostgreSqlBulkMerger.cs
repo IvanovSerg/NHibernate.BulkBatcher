@@ -10,6 +10,7 @@ using NHibernate.BulkBatcher.Core.Mergers;
 using NHibernate.BulkBatcher.Core.Model;
 using NHibernate.BulkBatcher.PostgreSql.Internal;
 using Npgsql;
+using NpgsqlTypes;
 
 namespace NHibernate.BulkBatcher.PostgreSql.Mergers
 {
@@ -172,7 +173,8 @@ namespace NHibernate.BulkBatcher.PostgreSql.Mergers
             var columns = schema.Rows.OfType<DataRow>().Select(x => new
             {
                 Name = (string) x["ColumnName"],
-                IsKey = (bool) x["IsKey"]
+                IsKey = (bool) x["IsKey"],
+                Type = GetNpgsqlType((string) x["DataTypeName"])
             }).ToList();
             var copyCommand = GetImportDataSql(tempTablePath, schema);
             using (var writer = connection.BeginBinaryImport(copyCommand))
@@ -196,14 +198,14 @@ namespace NHibernate.BulkBatcher.PostgreSql.Mergers
                         var specified = entity.Values.TryGetValue(column.Name, out var value);
 
                         //Запись значения столбца
-                        WriteValue(writer, value, specified);
+                        WriteValue(writer, value, specified, column.Type);
 
                         if (!column.IsKey)
                             continue;
 
                         if (entity.UpdatedKey == null)
                         {
-                            //Запись нового ключа
+                            //Запись пустого ключа
                             WriteValue(writer, null, false);
                             continue;
                         }
@@ -223,12 +225,28 @@ namespace NHibernate.BulkBatcher.PostgreSql.Mergers
         }
 
         /// <summary>
+        /// Возвращает явный <see cref="NpgsqlDbType"/> для указанного строкового представления типа
+        /// </summary>
+        protected virtual NpgsqlDbType? GetNpgsqlType(string type)
+        {
+            switch (type)
+            {
+                case "jsonb":
+                    return NpgsqlDbType.Jsonb;
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
         /// Пишет значение в импортер
         /// </summary>
-        private void WriteValue(NpgsqlBinaryImporter writer, object value, bool valueSpecified)
+        protected virtual void WriteValue(NpgsqlBinaryImporter writer, object value, bool valueSpecified, NpgsqlDbType? type = null)
         {
             if (!valueSpecified || value == null || value == DBNull.Value)
                 writer.WriteNull();
+            else if (type.HasValue)
+                writer.Write(value, type.Value);
             else
                 writer.Write(value);
 
