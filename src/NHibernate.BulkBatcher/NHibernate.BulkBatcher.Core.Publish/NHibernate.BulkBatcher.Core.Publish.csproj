@@ -9,7 +9,7 @@
   </ItemGroup>
   
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>NHibernate.BulkBatcher.Core</AssemblyName>
     <RootNamespace>NHibernate.BulkBatcher.Core</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -17,11 +17,11 @@
     <PackageTags>NHibernate, BulkInsert, BulkUpsert, BulkMerge, Bulk, Operations</PackageTags>
     <AssemblyVersion>1.0.4.0</AssemblyVersion>
     <FileVersion>1.0.4.0</FileVersion>
-    <Version>1.0.5</Version>
-    <PackageProjectUrl>https://github.com/ThisShard/NHibernate.BulkBatcher</PackageProjectUrl>
+    <Version>1.0.6</Version>
+    <PackageProjectUrl>https://github.com/IvanovSerg/NHibernate.BulkBatcher</PackageProjectUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
     <Copyright>ThisShard</Copyright>
-    <RepositoryUrl>https://github.com/ThisShard/NHibernate.BulkBatcher</RepositoryUrl>
+    <RepositoryUrl>https://github.com/IvanovSerg/NHibernate.BulkBatcher</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
   
@@ -30,7 +30,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NHibernate" Version="5.2.5" />
+    <PackageReference Include="NHibernate" Version="5.4.6" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,17 +9,17 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>NHibernate bulk batcher for PostgreSQL</Description>
     <PackageTags>NHibernate, BulkInsert, BulkUpsert, BulkMerge, Bulk, Operations, Postgres, PostgreSQL</PackageTags>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
     <AssemblyName>NHibernate.BulkBatcher.PostgreSql</AssemblyName>
     <RootNamespace>NHibernate.BulkBatcher.Core.PostgreSql</RootNamespace>
     <Copyright>ThisShard</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/ThisShard/NHibernate.BulkBatcher</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/ThisShard/NHibernate.BulkBatcher</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/IvanovSerg/NHibernate.BulkBatcher</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/IvanovSerg/NHibernate.BulkBatcher</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
@@ -28,9 +28,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NHibernate" Version="5.2.5" />
+    <PackageReference Include="NHibernate" Version="5.4.6" />
     <PackageReference Include="NHibernate.BulkBatcher.Core" Version="1.0.5" />
-    <PackageReference Include="Npgsql" Version="4.0.7" />
+    <PackageReference Include="Npgsql" Version="7.0.6" />
   </ItemGroup>
 
   <ItemGroup>
