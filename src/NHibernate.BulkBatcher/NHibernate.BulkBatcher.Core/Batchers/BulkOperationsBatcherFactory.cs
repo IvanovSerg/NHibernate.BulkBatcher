@@ -25,7 +25,7 @@ namespace NHibernate.BulkBatcher.Core.Batchers
         /// <summary>
         /// Минимальное количество сущностей для которых применять Bulk Merge
         /// </summary>
-        public int MinimumBulkMergeEntitiesCount { get; set; } = 1000;
+        public int MinimumBulkMergeEntitiesCount { get; set; } = 400;
 
         /// <inheritdoc />
         public IBatcher CreateBatcher(ConnectionManager connectionManager, IInterceptor interceptor)
