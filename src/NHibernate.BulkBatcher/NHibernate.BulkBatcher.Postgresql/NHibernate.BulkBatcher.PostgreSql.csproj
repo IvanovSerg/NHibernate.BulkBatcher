@@ -5,7 +5,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>NHibernate bulk batcher for PostgreSQL</Description>
     <PackageTags>NHibernate, BulkInsert, BulkUpsert, BulkMerge, Bulk, Operations, Postgres, PostgreSQL</PackageTags>
-    <Version>1.0.8</Version>
+    <Version>1.0.10</Version>
     <PackageId>NHibernate.PgBulkBatcher</PackageId>
   </PropertyGroup>
 
