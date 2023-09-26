@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageId>NHibernate.PostgreSql.BulkBatcher.Core</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +18,7 @@
     <PackageTags>NHibernate, BulkInsert, BulkUpsert, BulkMerge, Bulk, Operations</PackageTags>
     <AssemblyVersion>1.0.4.0</AssemblyVersion>
     <FileVersion>1.0.4.0</FileVersion>
-    <Version>1.0.6</Version>
+    <Version>1.0.9</Version>
     <PackageProjectUrl>https://github.com/IvanovSerg/NHibernate.BulkBatcher</PackageProjectUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
     <Copyright>ThisShard</Copyright>
@@ -31,6 +32,7 @@
 
   <ItemGroup>
     <PackageReference Include="NHibernate" Version="5.4.6" />
+    <PackageReference Include="Npgsql" Version="7.0.6" />
   </ItemGroup>
 
   <ItemGroup>

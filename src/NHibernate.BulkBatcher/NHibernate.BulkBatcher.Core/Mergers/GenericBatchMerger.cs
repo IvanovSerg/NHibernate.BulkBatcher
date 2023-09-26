@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NHibernate.BulkBatcher.Core.Model;
@@ -37,7 +35,7 @@ namespace NHibernate.BulkBatcher.Core.Mergers
 
         /// <inheritdoc />
         public int Merge(IEnumerable<EntityInfo> entities, IDriver driver, IDbConnection connection,
-            IDbTransaction transaction, Action<IDbCommand> logAction = null)
+            IDbTransaction transaction, bool isGeometryPresent, Action<IDbCommand> logAction = null)
         {
             var count = 0;
             foreach (var page in Paged(entities, BatchSize))
@@ -51,7 +49,6 @@ namespace NHibernate.BulkBatcher.Core.Mergers
 
             return count;
         }
-
 
         /// <inheritdoc />
         public async Task<int> MergeAsync(IEnumerable<EntityInfo> entities, IDriver driver, IDbConnection connection,
@@ -91,6 +88,7 @@ namespace NHibernate.BulkBatcher.Core.Mergers
                     page = new List<T>();
                 }
             }
+
             if (page.Any())
                 yield return page;
         }

@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using NHibernate.AdoNet;
 using NHibernate.BulkBatcher.Core.EntityInfoExtractors;
 using NHibernate.BulkBatcher.Core.Mergers;
 using NHibernate.BulkBatcher.Core.Model;
-using NHibernate.SqlCommand;
-using NHibernate.SqlTypes;
+using NpgsqlTypes;
 
 namespace NHibernate.BulkBatcher.Core.Batchers
 {
@@ -33,10 +28,11 @@ namespace NHibernate.BulkBatcher.Core.Batchers
 
         /// <inheritdoc />
         public BulkOperationsBatcher(
-            ConnectionManager connectionManager, 
-            IInterceptor interceptor, 
-            ICollection<IEntityInfoExtractor> extractors, 
-            IBulkMerger bulkMerger) : base(connectionManager, interceptor)
+            ConnectionManager connectionManager,
+            IInterceptor interceptor,
+            ICollection<IEntityInfoExtractor> extractors,
+            IBulkMerger bulkMerger
+        ) : base(connectionManager, interceptor)
         {
             BatchSize = Factory.Settings.AdoBatchSize;
             mExtractors = extractors;
@@ -53,11 +49,13 @@ namespace NHibernate.BulkBatcher.Core.Batchers
                 {
                     Prepare(ps);
 
+                    var isGeometryPresent = ps.Parameters.OfType<Npgsql.NpgsqlParameter>().Any(x => x.NpgsqlDbType == NpgsqlDbType.Geometry);
+
 #if DEBUG
                     Debug.WriteLine($"Начата обработка {mCurrentEntites.Count} записей.");
                     var sw = Stopwatch.StartNew();
 #endif
-                    var result = mBulkMerger.Merge(mCurrentEntites, Driver, ps.Connection, ps.Transaction, x => LogCommand((DbCommand)x));
+                    var result = mBulkMerger.Merge(mCurrentEntites, Driver, ps.Connection, ps.Transaction, isGeometryPresent, x => LogCommand((DbCommand)x));
 #if DEBUG
                     sw.Stop();
                     Debug.WriteLine($"Обработка {mCurrentEntites.Count} записей завершена. Прошло {sw.ElapsedMilliseconds} мс.");
@@ -90,7 +88,7 @@ namespace NHibernate.BulkBatcher.Core.Batchers
                 expectation.VerifyOutcomeNonBatched(rowCount, cmd);
                 return;
             }
-            
+
             mCurrentEntites.Add(entityInfo);
 
             if (mCurrentEntites.Count >= BatchSize)
@@ -98,7 +96,7 @@ namespace NHibernate.BulkBatcher.Core.Batchers
                 ExecuteBatchWithTiming(CurrentCommand);
             }
         }
-        
+
         /// <summary>
         /// Пытается извлечь <see cref="EntityInfo"/> из текущего состояния
         /// </summary>

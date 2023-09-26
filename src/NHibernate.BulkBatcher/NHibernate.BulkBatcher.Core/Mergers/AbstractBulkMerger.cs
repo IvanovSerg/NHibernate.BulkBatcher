@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using NHibernate.BulkBatcher.Core.Internal;
 using NHibernate.BulkBatcher.Core.Model;
 using NHibernate.Driver;
-using NHibernate.SqlCommand;
 
 namespace NHibernate.BulkBatcher.Core.Mergers
 {
@@ -47,7 +42,7 @@ namespace NHibernate.BulkBatcher.Core.Mergers
 
             //Разделяем сущности по типам и производим обработку потипно
             foreach (var entityType in entities.GroupBy(x => x.TablePath,
-                new ArrayEqualityComparer<string>(StringComparer.InvariantCultureIgnoreCase)))
+                         new ArrayEqualityComparer<string>(StringComparer.InvariantCultureIgnoreCase)))
             {
                 //Получаем схему таблицы
                 var schema = GetSchemaTable(entityType.Key, connection, transaction, logAction);
@@ -60,7 +55,7 @@ namespace NHibernate.BulkBatcher.Core.Mergers
 
                 //Мердж временной таблицы с реальной таблицей
                 count += MergeTables(tempTablePath, entityType.Key, schema, expectedCount, connection, transaction, logAction);
-                
+
                 //Дроп временной таблицы
                 DropTempTable(tempTablePath, connection, transaction, logAction);
             }
@@ -107,10 +102,10 @@ namespace NHibernate.BulkBatcher.Core.Mergers
         /// Дропает временную таблицу
         /// </summary>
         protected abstract void DropTempTable(string[] tempTablePath, TConnection connection, TTransaction transaction, Action<IDbCommand> logAction);
-        
+
         /// <inheritdoc />
         int IBulkMerger.Merge(IEnumerable<EntityInfo> entities, IDriver driver, IDbConnection connection,
-            IDbTransaction transaction, Action<IDbCommand> logAction = null)
+            IDbTransaction transaction, bool isGeometryPresent, Action<IDbCommand> logAction = null)
         {
             var typedConnection = connection is TConnection cn ? cn : default(TConnection);
             var typedTransaction = transaction is TTransaction tr ? tr : default(TTransaction);

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NHibernate.BulkBatcher.Core.Model;
@@ -16,24 +14,29 @@ namespace NHibernate.BulkBatcher.Core.Mergers
     /// </summary>
     public class SmartMerger : IBulkMerger
     {
-        private readonly IList<SmartMergerConfiguration> mConfigurations;
+        private readonly IList<SmartMergerConfiguration> _mConfigurations;
 
         public SmartMerger(IEnumerable<SmartMergerConfiguration> configurations)
         {
-            mConfigurations = configurations.OrderByDescending(x => x.MinBatchSize).ToList();
+            _mConfigurations = configurations.OrderByDescending(x => x.MinBatchSize).ToList();
         }
 
         /// <inheritdoc />
         public int Merge(IEnumerable<EntityInfo> entities, IDriver driver, IDbConnection connection,
-            IDbTransaction transaction, Action<IDbCommand> logAction = null)
+            IDbTransaction transaction, bool isGeometryPresent, Action<IDbCommand> logAction = null)
         {
-            var entitiesList = (entities is ICollection<EntityInfo> collection) ? collection : entities.ToList();
+            var entitiesList = entities as ICollection<EntityInfo> ?? entities.ToList();
 
-            var merger = GetMerger(entitiesList.Count);
+            var merger = GetMerger(isGeometryPresent
+                ?
+                //TODO: Пока так для фикса геометрии
+                100000
+                : entitiesList.Count);
+
             if (merger == null)
                 throw new InvalidOperationException($"Can't find appropriate merger for {entitiesList.Count}");
 
-            return merger.Merge(entitiesList, driver, connection, transaction, logAction);
+            return merger.Merge(entitiesList, driver, connection, transaction, isGeometryPresent, logAction);
         }
 
         /// <inheritdoc />
@@ -41,7 +44,7 @@ namespace NHibernate.BulkBatcher.Core.Mergers
             IDbTransaction transaction,
             CancellationToken cancellationToken, Action<IDbCommand> logAction = null)
         {
-            var entitiesList = (entities is ICollection<EntityInfo> collection) ? collection : entities.ToList();
+            var entitiesList = entities as ICollection<EntityInfo> ?? entities.ToList();
 
             var merger = GetMerger(entitiesList.Count);
             if (merger == null)
@@ -55,7 +58,7 @@ namespace NHibernate.BulkBatcher.Core.Mergers
         /// </summary>
         private IBulkMerger GetMerger(int count)
         {
-            foreach (var cfg in mConfigurations)
+            foreach (var cfg in _mConfigurations)
             {
                 if (cfg.MinBatchSize <= count)
                     return cfg.Merger;
@@ -63,6 +66,5 @@ namespace NHibernate.BulkBatcher.Core.Mergers
 
             return null;
         }
-
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NHibernate.BulkBatcher.Core.Internal;
@@ -22,7 +21,7 @@ namespace NHibernate.BulkBatcher.Core.Mergers
             var count = 0;
             //Разделяем сущности по типам и производим обработку потипно
             foreach (var entityType in entities.GroupBy(x => x.TablePath,
-                new ArrayEqualityComparer<string>(StringComparer.InvariantCultureIgnoreCase)))
+                         new ArrayEqualityComparer<string>(StringComparer.InvariantCultureIgnoreCase)))
             {
                 //Получаем схему таблицы
                 var schema = await GetSchemaTableAsync(entityType.Key, connection, transaction, cancellationToken, logAction);
@@ -46,7 +45,8 @@ namespace NHibernate.BulkBatcher.Core.Mergers
         /// <summary>
         /// Получает схему таблицы
         /// </summary>
-        protected virtual async Task<DataTable> GetSchemaTableAsync(string[] tablePath, TConnection connection, TTransaction transaction, CancellationToken cancellationToken, Action<IDbCommand> logAction)
+        protected virtual async Task<DataTable> GetSchemaTableAsync(string[] tablePath, TConnection connection, TTransaction transaction, CancellationToken cancellationToken,
+            Action<IDbCommand> logAction)
         {
             if (mSchemaCache.TryGetValue(tablePath, out var schema))
                 return schema;
@@ -59,12 +59,14 @@ namespace NHibernate.BulkBatcher.Core.Mergers
         /// <summary>
         /// Получает схему таблицы из БД
         /// </summary>
-        protected abstract Task<DataTable> GetSchemaTableFromDatabaseAsync(string[] tablePath, TConnection connection, TTransaction transaction, CancellationToken cancellationToken, Action<IDbCommand> logAction);
+        protected abstract Task<DataTable> GetSchemaTableFromDatabaseAsync(string[] tablePath, TConnection connection, TTransaction transaction,
+            CancellationToken cancellationToken, Action<IDbCommand> logAction);
 
         /// <summary>
         /// Создает временную таблицу и возвращает к ней путь
         /// </summary>
-        protected abstract Task<string[]> CreateTempTableAsync(DataTable schema, TConnection connection, TTransaction transaction, CancellationToken cancellationToken, Action<IDbCommand> logAction);
+        protected abstract Task<string[]> CreateTempTableAsync(DataTable schema, TConnection connection, TTransaction transaction, CancellationToken cancellationToken,
+            Action<IDbCommand> logAction);
 
         /// <summary>
         /// Производит копирование данных во временную таблицу
@@ -83,7 +85,8 @@ namespace NHibernate.BulkBatcher.Core.Mergers
         /// <summary>
         /// Дропает временную таблицу
         /// </summary>
-        protected abstract Task DropTempTableAsync(string[] tempTablePath, TConnection connection, TTransaction transaction, CancellationToken cancellationToken, Action<IDbCommand> logAction);
+        protected abstract Task DropTempTableAsync(string[] tempTablePath, TConnection connection, TTransaction transaction, CancellationToken cancellationToken,
+            Action<IDbCommand> logAction);
 
         /// <inheritdoc />
         Task<int> IBulkMerger.MergeAsync(IEnumerable<EntityInfo> entities, IDriver driver, IDbConnection connection,

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using NHibernate.AdoNet;
 using NHibernate.BulkBatcher.Core.EntityInfoExtractors;
 using NHibernate.BulkBatcher.Core.Mergers;
@@ -28,7 +26,7 @@ namespace NHibernate.BulkBatcher.Core.Batchers
         /// Минимальное количество сущностей для которых применять Bulk Merge
         /// </summary>
         public int MinimumBulkMergeEntitiesCount { get; set; } = 1000;
-        
+
         /// <inheritdoc />
         public IBatcher CreateBatcher(ConnectionManager connectionManager, IInterceptor interceptor)
         {
@@ -77,7 +75,7 @@ namespace NHibernate.BulkBatcher.Core.Batchers
 
             return config;
         }
-        
+
         /// <summary>
         /// Создает конфигурацию для смарт мерджера для простого выполнения команд
         /// </summary>

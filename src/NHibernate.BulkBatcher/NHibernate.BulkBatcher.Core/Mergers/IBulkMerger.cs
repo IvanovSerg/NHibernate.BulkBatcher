@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NHibernate.BulkBatcher.Core.Model;
@@ -17,11 +16,13 @@ namespace NHibernate.BulkBatcher.Core.Mergers
         /// <summary>
         /// Производит запись сущностей в БД используя Bulk операции
         /// </summary>
-        int Merge(IEnumerable<EntityInfo> entities, IDriver driver, IDbConnection connection, IDbTransaction transaction, Action<IDbCommand> logAction = null);
+        int Merge(IEnumerable<EntityInfo> entities, IDriver driver, IDbConnection connection, IDbTransaction transaction, bool isGeometryPresent,
+            Action<IDbCommand> logAction = null);
 
         /// <summary>
         /// Производит запись сущностей в БД используя Bulk операции
         /// </summary>
-        Task<int> MergeAsync(IEnumerable<EntityInfo> entities, IDriver driver, IDbConnection connection, IDbTransaction transaction, CancellationToken cancellationToken, Action<IDbCommand> logAction = null);
+        Task<int> MergeAsync(IEnumerable<EntityInfo> entities, IDriver driver, IDbConnection connection, IDbTransaction transaction, CancellationToken cancellationToken,
+            Action<IDbCommand> logAction = null);
     }
 }

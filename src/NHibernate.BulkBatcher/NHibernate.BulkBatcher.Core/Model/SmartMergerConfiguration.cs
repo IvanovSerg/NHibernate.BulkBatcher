@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using NHibernate.BulkBatcher.Core.Mergers;
+﻿using NHibernate.BulkBatcher.Core.Mergers;
 
 namespace NHibernate.BulkBatcher.Core.Model
 {

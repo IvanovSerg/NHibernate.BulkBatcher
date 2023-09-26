@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Text;
-using Antlr.Runtime.Tree;
-using NHibernate.Driver;
-using NHibernate.SqlCommand;
-using NHibernate.SqlTypes;
+﻿using System.Collections.Generic;
 
 namespace NHibernate.BulkBatcher.Core.Model
 {
@@ -39,7 +31,5 @@ namespace NHibernate.BulkBatcher.Core.Model
         /// Информация о команде из которой была создана эта сущность
         /// </summary>
         public CommandInfo CommandInfo { get; set; }
-
-
     }
 }
