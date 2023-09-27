@@ -37,6 +37,7 @@ namespace NHibernate.BulkBatcher.Core.Mergers
         /// <inheritdoc />
         public async Task<int> MergeAsync(IEnumerable<EntityInfo> entities, IDriver driver, IDbConnection connection,
             IDbTransaction transaction,
+            bool isGeometryPresent,
             CancellationToken cancellationToken, Action<IDbCommand> logAction = null)
         {
             var count = 0;

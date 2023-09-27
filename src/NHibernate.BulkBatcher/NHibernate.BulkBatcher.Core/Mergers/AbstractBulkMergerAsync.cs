@@ -91,6 +91,7 @@ namespace NHibernate.BulkBatcher.Core.Mergers
         /// <inheritdoc />
         Task<int> IBulkMerger.MergeAsync(IEnumerable<EntityInfo> entities, IDriver driver, IDbConnection connection,
             IDbTransaction transaction,
+            bool isGeometryPresent,
             CancellationToken cancellationToken, Action<IDbCommand> logAction = null)
         {
             var typedConnection = connection is TConnection cn ? cn : default(TConnection);

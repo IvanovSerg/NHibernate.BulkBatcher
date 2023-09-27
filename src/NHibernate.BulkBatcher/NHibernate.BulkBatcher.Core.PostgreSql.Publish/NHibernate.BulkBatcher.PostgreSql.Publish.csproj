@@ -15,7 +15,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>NHibernate bulk batcher for PostgreSQL</Description>
     <PackageTags>NHibernate, BulkInsert, BulkUpsert, BulkMerge, Bulk, Operations, Postgres, PostgreSQL</PackageTags>
-    <Version>1.0.10</Version>
+    <Version>1.0.11</Version>
     <AssemblyName>NHibernate.BulkBatcher.PostgreSql</AssemblyName>
     <RootNamespace>NHibernate.BulkBatcher.Core.PostgreSql</RootNamespace>
     <Copyright>IvanovSerg</Copyright>
@@ -31,12 +31,15 @@
 
   <ItemGroup>
     <PackageReference Include="NHibernate" Version="5.4.6" />
-    <PackageReference Include="NHibernate.BulkBatcher.Core" Version="1.0.5" />
     <PackageReference Include="Npgsql" Version="7.0.6" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\NHibernate.BulkBatcher.PostgreSql\**\*.cs" Exclude="..\NHibernate.BulkBatcher.PostgreSql\obj\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NHibernate.BulkBatcher.Core.Publish\NHibernate.BulkBatcher.Core.Publish.csproj" />
   </ItemGroup>
 
 </Project>

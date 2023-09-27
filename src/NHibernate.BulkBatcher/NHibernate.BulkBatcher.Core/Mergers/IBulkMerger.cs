@@ -22,7 +22,8 @@ namespace NHibernate.BulkBatcher.Core.Mergers
         /// <summary>
         /// Производит запись сущностей в БД используя Bulk операции
         /// </summary>
-        Task<int> MergeAsync(IEnumerable<EntityInfo> entities, IDriver driver, IDbConnection connection, IDbTransaction transaction, CancellationToken cancellationToken,
+        Task<int> MergeAsync(IEnumerable<EntityInfo> entities, IDriver driver, IDbConnection connection, IDbTransaction transaction, bool isGeometryPresent,
+            CancellationToken cancellationToken,
             Action<IDbCommand> logAction = null);
     }
 }

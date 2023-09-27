@@ -42,15 +42,22 @@ namespace NHibernate.BulkBatcher.Core.Mergers
         /// <inheritdoc />
         public async Task<int> MergeAsync(IEnumerable<EntityInfo> entities, IDriver driver, IDbConnection connection,
             IDbTransaction transaction,
+            bool isGeometryPresent,
             CancellationToken cancellationToken, Action<IDbCommand> logAction = null)
         {
             var entitiesList = entities as ICollection<EntityInfo> ?? entities.ToList();
 
-            var merger = GetMerger(entitiesList.Count);
+            var merger = GetMerger(isGeometryPresent
+                ?
+                //TODO: Пока так для фикса геометрии
+                100000
+                : entitiesList.Count);
+
+            // var merger = GetMerger(entitiesList.Count);
             if (merger == null)
                 throw new InvalidOperationException($"Can't find appropriate merger for {entitiesList.Count}");
 
-            return await merger.MergeAsync(entitiesList, driver, connection, transaction, cancellationToken, logAction);
+            return await merger.MergeAsync(entitiesList, driver, connection, transaction, isGeometryPresent, cancellationToken, logAction);
         }
 
         /// <summary>

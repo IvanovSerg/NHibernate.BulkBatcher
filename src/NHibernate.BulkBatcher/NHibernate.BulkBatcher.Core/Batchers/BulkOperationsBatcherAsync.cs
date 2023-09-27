@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NHibernate.AdoNet;
 using NHibernate.BulkBatcher.Core.Model;
+using NpgsqlTypes;
 
 namespace NHibernate.BulkBatcher.Core.Batchers
 {
@@ -24,11 +25,13 @@ namespace NHibernate.BulkBatcher.Core.Batchers
                 if (mCurrentEntites.Any())
                 {
                     Prepare(ps);
+                    
+                    var isGeometryPresent = ps.Parameters.OfType<Npgsql.NpgsqlParameter>().Any(x => x.NpgsqlDbType == NpgsqlDbType.Geometry);
 #if DEBUG
                     Debug.WriteLine($"Начата обработка {mCurrentEntites.Count} записей.");
                     var sw = Stopwatch.StartNew();
 #endif
-                    var result = await mBulkMerger.MergeAsync(mCurrentEntites, Driver, ps.Connection, ps.Transaction, cancellationToken);
+                    var result = await mBulkMerger.MergeAsync(mCurrentEntites, Driver, ps.Connection, ps.Transaction, isGeometryPresent, cancellationToken);
 #if DEBUG
                     sw.Stop();
                     Debug.WriteLine($"Обработка {mCurrentEntites.Count} записей завершена. Прошло {sw.ElapsedMilliseconds} мс.");
